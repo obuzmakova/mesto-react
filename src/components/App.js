@@ -4,11 +4,13 @@ import Main from './Main'
 import Footer from './Footer'
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import Card from './Card';
 import api from '../utils/api';
 
 function App() {
-    const [profileInfo, setInfo] = useState([])
-    const [isEditProfilePopupOpen, setProfile] = useState(false)
+    const [profileInfo, setInfo] = useState([]);
+    const [cards, setCards] = useState([]);
+    const [isEditProfilePopupOpen, setProfile] = useState(false);
     const [isAddPlacePopupOpen, setPlace] = useState(false);
     const [isEditAvatarPopupOpen, setAvatar] = useState(false);
     const [isLoading, setLoading] = useState(false);
@@ -20,7 +22,6 @@ function App() {
     }
 
     useEffect(() => {
-        setLoading(true);
         api.getUserInfo()
             .then(info => {
                 setInfo(() => ({
@@ -28,14 +29,25 @@ function App() {
                     about: info.about,
                     avatar: info.avatar
                 }))
+            })
+    }, [])
+    useEffect(() => {
+        setLoading(true)
+        api.getInitialCards()
+            .then(data => {
                 setLoading(false);
+                setCards(data.map(item => ({
+                    title: item.description,
+                    id: item.id
+                })))
+                console.log(cards);
             })
     }, [])
     return (
       <div className="page">
         <Header />
 
-          {isLoading ? '' : <Main userName={profileInfo.name} userDescription={profileInfo.about} userAvatar={profileInfo.avatar}
+          <Main userName={profileInfo.name} userDescription={profileInfo.about} userAvatar={profileInfo.avatar}
             onEditAvatar={()=> {
                 setAvatar(true);
             }}
@@ -44,8 +56,11 @@ function App() {
             }}
             onAddPlace={() => {
                 setPlace(true);
-            }}
-        />}
+            }}>
+              <div>
+                {isLoading ? '' : cards.map(({id, ...card}) => <Card key={id} {...card} />)}
+              </div>
+          </Main>
 
         <Footer />
 
