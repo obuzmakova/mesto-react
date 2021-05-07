@@ -10,6 +10,12 @@ function App() {
     const [isAddPlacePopupOpen, setPlace] = useState(false);
     const [isEditAvatarPopupOpen, setAvatar] = useState(false);
 
+    function closeAllPopups() {
+        setAvatar(false);
+        setProfile(false);
+        setPlace(false);
+    }
+
   return (
       <div className="page">
         <Header />
@@ -28,14 +34,16 @@ function App() {
 
         <Footer />
 
-        <PopupWithForm title="Обновить аватар" name="avatar" submitBtn="Сохранить" isOpen={isEditAvatarPopupOpen}>
+        <PopupWithForm title="Обновить аватар" name="avatar" submitBtn="Сохранить" isOpen={isEditAvatarPopupOpen}
+                       onClose={closeAllPopups}>
             <div className="popup__rows">
                 <input type="url" placeholder="Ссылка на аватар" className="popup__text popup__text_type_link"
                        id="avatar" required/>
                 <span className="popup__text-error avatar-error"></span>
             </div>
         </PopupWithForm>
-        <PopupWithForm title="Редактировать профиль" name="profile" submitBtn="Сохранить" isOpen={isEditProfilePopupOpen}>
+        <PopupWithForm title="Редактировать профиль" name="profile" submitBtn="Сохранить"
+                       isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
             <div className="popup__rows">
                 <input type="text" placeholder="Имя" className="popup__text popup__text_type_name"
                        id="title" minLength="2" maxLength="40" required/>
@@ -45,7 +53,8 @@ function App() {
                 <span className="popup__text-error occupation-error"></span>
             </div>
         </PopupWithForm>
-        <PopupWithForm title="Новое место" name="card" submitBtn="Сохранить" isOpen={isAddPlacePopupOpen}>
+        <PopupWithForm title="Новое место" name="card" submitBtn="Сохранить" isOpen={isAddPlacePopupOpen}
+                       onClose={closeAllPopups}>
             <div className="popup__rows">
                 <input type="text" placeholder="Название" className="popup__text popup__text_type_place"
                        id="name" minLength="2" maxLength="30" required/>
@@ -55,7 +64,7 @@ function App() {
                 <span className="popup__text-error link-error"></span>
             </div>
         </PopupWithForm>
-        <PopupWithForm title="Вы уверены?" name="question" submitBtn="Да"> </PopupWithForm>
+        <PopupWithForm title="Вы уверены?" name="question" submitBtn="Да" onClose={closeAllPopups}> </PopupWithForm>
 
         <ImagePopup />
 
