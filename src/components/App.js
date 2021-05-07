@@ -1,14 +1,17 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import api from '../utils/api';
 
 function App() {
+    const [profileInfo, setInfo] = useState([])
     const [isEditProfilePopupOpen, setProfile] = useState(false)
     const [isAddPlacePopupOpen, setPlace] = useState(false);
     const [isEditAvatarPopupOpen, setAvatar] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
     function closeAllPopups() {
         setAvatar(false);
@@ -16,11 +19,23 @@ function App() {
         setPlace(false);
     }
 
-  return (
+    useEffect(() => {
+        setLoading(true);
+        api.getUserInfo()
+            .then(info => {
+                setInfo(() => ({
+                    name: info.name,
+                    about: info.about,
+                    avatar: info.avatar
+                }))
+                setLoading(false);
+            })
+    }, [])
+    return (
       <div className="page">
         <Header />
 
-        <Main
+          {isLoading ? '' : <Main userName={profileInfo.name} userDescription={profileInfo.about} userAvatar={profileInfo.avatar}
             onEditAvatar={()=> {
                 setAvatar(true);
             }}
@@ -30,7 +45,7 @@ function App() {
             onAddPlace={() => {
                 setPlace(true);
             }}
-        />
+        />}
 
         <Footer />
 
