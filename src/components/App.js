@@ -22,31 +22,21 @@ function App() {
     }
 
     useEffect(() => {
-        api.getUserInfo()
-            .then(info => {
+        Promise.all([api.getUserInfo(), api.getInitialCards()])
+            .then(([info, cards]) => {
                 setInfo(() => ({
                     name: info.name,
                     about: info.about,
                     avatar: info.avatar
-                }))
-            })
-    }, [])
-    useEffect(() => {
-        setLoading(true)
-        api.getInitialCards()
-            .then(data => {
-                setLoading(false);
-                setCards(data.map(item => ({
-                    title: item.description,
-                    id: item.id
-                })))
-                console.log(cards);
+                }));
+                setCards(cards);
             })
     }, [])
     return (
       <div className="page">
         <Header />
 
+        <div className="content">
           <Main userName={profileInfo.name} userDescription={profileInfo.about} userAvatar={profileInfo.avatar}
             onEditAvatar={()=> {
                 setAvatar(true);
@@ -56,11 +46,12 @@ function App() {
             }}
             onAddPlace={() => {
                 setPlace(true);
-            }}>
-              <div>
-                {isLoading ? '' : cards.map(({id, ...card}) => <Card key={id} {...card} />)}
-              </div>
-          </Main>
+            }}/>
+
+          <div className="elements">
+              {cards.map(({_id, ...card}) => <Card key={_id} {...card} />)}
+          </div>
+        </div>
 
         <Footer />
 

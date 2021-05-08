@@ -2,7 +2,7 @@ import React from 'react'
 
 function Main({userName, userDescription, userAvatar, onEditAvatar, onEditProfile, onAddPlace}) {
     return (
-        <div className="content">
+        <div>
             <section className="profile">
                 <div className="profile__avatar">
                     <img className="profile__image" src={userAvatar} alt="Жак-Ив Кусто"/>
@@ -14,10 +14,6 @@ function Main({userName, userDescription, userAvatar, onEditAvatar, onEditProfil
                     <p className="profile__subtitle">{userDescription}</p>
                 </div>
                 <button type="button" onClick={onAddPlace} className="profile__add-button"/>
-            </section>
-
-            <section className="elements">
-
             </section>
         </div>
     )
