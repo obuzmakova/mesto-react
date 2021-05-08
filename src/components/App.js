@@ -13,12 +13,17 @@ function App() {
     const [isEditProfilePopupOpen, setProfile] = useState(false);
     const [isAddPlacePopupOpen, setPlace] = useState(false);
     const [isEditAvatarPopupOpen, setAvatar] = useState(false);
-    const [isLoading, setLoading] = useState(false);
+    const [selectedCard, setSelect] = useState('');
 
     function closeAllPopups() {
         setAvatar(false);
         setProfile(false);
         setPlace(false);
+        setSelect('');
+    }
+
+    function handleCardClick(card) {
+        setSelect(card);
     }
 
     useEffect(() => {
@@ -31,6 +36,9 @@ function App() {
                 }));
                 setCards(cards);
             })
+            .catch((err) => {
+                console.log(err);
+            });
     }, [])
     return (
       <div className="page">
@@ -49,7 +57,7 @@ function App() {
             }}/>
 
           <div className="elements">
-              {cards.map(({_id, ...card}) => <Card key={_id} {...card} />)}
+              {cards.map(({_id, ...card}) => <Card key={_id} {...card} onCardClick={handleCardClick}/>)}
           </div>
         </div>
 
@@ -87,7 +95,7 @@ function App() {
         </PopupWithForm>
         <PopupWithForm title="Вы уверены?" name="question" submitBtn="Да" onClose={closeAllPopups}> </PopupWithForm>
 
-        <ImagePopup />
+        <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
 
       </div>
   );
