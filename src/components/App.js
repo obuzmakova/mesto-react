@@ -4,22 +4,21 @@ import Main from './Main'
 import Footer from './Footer'
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-import Card from './Card';
 import api from '../utils/api';
 
 function App() {
-    const [profileInfo, setInfo] = useState([]);
+    const [profileInfo, setInfo] = useState({});
     const [cards, setCards] = useState([]);
-    const [isEditProfilePopupOpen, setProfile] = useState(false);
-    const [isAddPlacePopupOpen, setPlace] = useState(false);
-    const [isEditAvatarPopupOpen, setAvatar] = useState(false);
-    const [selectedCard, setSelect] = useState('');
+    const [isEditProfilePopupOpen, setProfilePopupOpen] = useState(false);
+    const [isAddPlacePopupOpen, setPlacePopupOpen] = useState(false);
+    const [isEditAvatarPopupOpen, setAvatarPopupOpen] = useState(false);
+    const [selectedCard, setSelect] = useState(null);
 
     function closeAllPopups() {
-        setAvatar(false);
-        setProfile(false);
-        setPlace(false);
-        setSelect('');
+        setAvatarPopupOpen(false);
+        setProfilePopupOpen(false);
+        setPlacePopupOpen(false);
+        setSelect(null);
     }
 
     function handleCardClick(card) {
@@ -46,19 +45,17 @@ function App() {
 
         <div className="content">
           <Main userName={profileInfo.name} userDescription={profileInfo.about} userAvatar={profileInfo.avatar}
-            onEditAvatar={()=> {
-                setAvatar(true);
-            }}
-            onEditProfile={()=> {
-                setProfile(true);
-            }}
-            onAddPlace={() => {
-                setPlace(true);
-            }}/>
-
-          <div className="elements">
-              {cards.map(({_id, ...card}) => <Card key={_id} {...card} onCardClick={handleCardClick}/>)}
-          </div>
+                cards={cards}
+                onCardClick={handleCardClick}
+                onEditAvatar={()=> {
+                    setAvatarPopupOpen(true);
+                }}
+                onEditProfile={()=> {
+                    setProfilePopupOpen(true);
+                }}
+                onAddPlace={() => {
+                    setPlacePopupOpen(true);
+                }}/>
         </div>
 
         <Footer />
@@ -95,7 +92,7 @@ function App() {
         </PopupWithForm>
         <PopupWithForm title="Вы уверены?" name="question" submitBtn="Да" onClose={closeAllPopups}> </PopupWithForm>
 
-        <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+        <ImagePopup image={selectedCard} onClose={closeAllPopups}/>
 
       </div>
   );

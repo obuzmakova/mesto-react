@@ -1,6 +1,7 @@
-import React from 'react'
+import React from 'react';
+import Card from './Card';
 
-function Main({userName, userDescription, userAvatar, onEditAvatar, onEditProfile, onAddPlace}) {
+function Main({userName, userDescription, userAvatar, cards, onCardClick, onEditAvatar, onEditProfile, onAddPlace}) {
     return (
         <div>
             <section className="profile">
@@ -15,6 +16,9 @@ function Main({userName, userDescription, userAvatar, onEditAvatar, onEditProfil
                 </div>
                 <button type="button" onClick={onAddPlace} className="profile__add-button"/>
             </section>
+            <div className="elements">
+                {cards.map((card) => (<Card key={card._id} card={card} onClick={onCardClick}/>))}
+            </div>
         </div>
     )
 }
