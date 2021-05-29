@@ -3,7 +3,7 @@ import Card from './Card';
 import {CurrentUserContext}from '../contexts/CurrentUserContext';
 import {CardsContext} from '../contexts/CardsContext';
 
-function Main({onCardClick, onEditAvatar, onEditProfile, onAddPlace}) {
+function Main({onCardClick, onEditAvatar, onEditProfile, onAddPlace, onCardLike}) {
     const currentUser = React.useContext(CurrentUserContext);
     const cards = React.useContext(CardsContext);
 
@@ -22,7 +22,7 @@ function Main({onCardClick, onEditAvatar, onEditProfile, onAddPlace}) {
                 <button type="button" onClick={onAddPlace} className="profile__add-button"/>
             </section>
             <div className="elements">
-                {cards.map((card) => (<Card key={card._id} card={card} onClick={onCardClick}/>))}
+                {cards.map((card) => (<Card key={card._id} card={card} onClick={onCardClick} onCardLike={onCardLike}/>))}
             </div>
         </div>
     )

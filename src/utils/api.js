@@ -58,6 +58,15 @@ class Api {
             .then(this._checkResponse);
     }
 
+
+    changeLikeCardStatus(cardId, isLiked) {
+        if (isLiked) {
+            return this.setLike(cardId);
+        } else {
+           return this.deleteLike(cardId);
+        }
+    }
+
     setLike(cardsId) {
         return fetch(`${this._url}/cards/likes/${cardsId}`, {
             method: 'PUT',
