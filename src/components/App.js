@@ -37,6 +37,18 @@ function App() {
         });
     }
 
+    function handleCardDelete(card) {
+        const isDeleted = card._id;
+
+        api.deleteCard(card._id)
+            .then((deletedCard) => {
+                let newCards = cards.filter(function(card) {
+                    return card._id !== isDeleted;
+                });
+                setCards(newCards);
+            });
+    }
+
     useEffect(() => {
         Promise.all([api.getUserInfo(), api.getInitialCards()])
             .then(([info, cards]) => {
@@ -64,7 +76,8 @@ function App() {
                         onAddPlace={() => {
                             setPlacePopupOpen(true);
                         }}
-                        onCardLike={handleCardLike}/>
+                        onCardLike={handleCardLike}
+                        onCardDelete={handleCardDelete}/>
                 </div>
 
                 <Footer />
