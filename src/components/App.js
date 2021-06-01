@@ -5,6 +5,7 @@ import Footer from './Footer'
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from "./EditAvatarPopup";
 import api from '../utils/api';
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import {CardsContext} from '../contexts/CardsContext'
@@ -60,8 +61,19 @@ function App() {
     function handleUpdateUser({name, about}) {
         api.updateUserInfo(name, about)
             .then((info) => {
-            setCurrentUser(info);
-            closeAllPopups();
+                setCurrentUser(info);
+                closeAllPopups();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    function handleUpdateAvatar(avatar) {
+        api.addNewAvatar(avatar)
+            .then((data) => {
+                setCurrentUser(data);
+                closeAllPopups();
             })
             .catch((err) => {
                 console.log(err);
@@ -101,15 +113,7 @@ function App() {
 
                 <Footer />
 
-                  <PopupWithForm title="Обновить аватар" name="avatar" submitBtn="Сохранить" isOpen={isEditAvatarPopupOpen}
-                                 onClose={closeAllPopups}>
-                      <div className="popup__rows">
-                          <input type="url" placeholder="Ссылка на аватар" className="popup__text popup__text_type_link"
-                                 id="avatar" required/>
-                          <span className="popup__text-error avatar-error"></span>
-                      </div>
-                  </PopupWithForm>
-
+                <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
                 <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 
                 <PopupWithForm title="Новое место" name="card" submitBtn="Сохранить" isOpen={isAddPlacePopupOpen}
