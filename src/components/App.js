@@ -6,6 +6,7 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from './AddPlacePopup';
 import api from '../utils/api';
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import {CardsContext} from '../contexts/CardsContext'
@@ -80,6 +81,17 @@ function App() {
             });
     }
 
+    function handleAddPlaceSubmit({name, link}) {
+        api.addNewCard(name, link)
+            .then((newCard) => {
+                setCards([newCard, ...cards]);
+                closeAllPopups();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
     useEffect(() => {
         Promise.all([api.getUserInfo(), api.getInitialCards()])
             .then(([info, cards]) => {
@@ -97,7 +109,8 @@ function App() {
                 <Header />
 
                 <div className="content">
-                  <Main onCardClick={handleCardClick}
+                  <Main cards={cards}
+                        onCardClick={handleCardClick}
                         onEditAvatar={()=> {
                             setAvatarPopupOpen(true);
                         }}
@@ -115,18 +128,8 @@ function App() {
 
                 <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
                 <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+                <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddCard={handleAddPlaceSubmit}/>
 
-                <PopupWithForm title="Новое место" name="card" submitBtn="Сохранить" isOpen={isAddPlacePopupOpen}
-                               onClose={closeAllPopups}>
-                    <div className="popup__rows">
-                        <input type="text" placeholder="Название" className="popup__text popup__text_type_place"
-                               id="name" minLength="2" maxLength="30" required/>
-                        <span className="popup__text-error name-error"></span>
-                        <input type="url" placeholder="Ссылка на картинку" className="popup__text popup__text_type_link"
-                               id="link" required/>
-                        <span className="popup__text-error link-error"></span>
-                    </div>
-                </PopupWithForm>
                 <PopupWithForm title="Вы уверены?" name="question" submitBtn="Да" onClose={closeAllPopups}> </PopupWithForm>
 
                 <ImagePopup image={selectedCard} onClose={closeAllPopups}/>
