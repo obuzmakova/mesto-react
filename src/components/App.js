@@ -4,6 +4,7 @@ import Main from './Main'
 import Footer from './Footer'
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import EditProfilePopup from './EditProfilePopup';
 import api from '../utils/api';
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import {CardsContext} from '../contexts/CardsContext'
@@ -32,9 +33,13 @@ function App() {
         const isLiked = card.likes.some(i => i._id === currentUser._id);
 
         // Отправляем запрос в API и получаем обновлённые данные карточки
-        api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+        api.changeLikeCardStatus(card._id, !isLiked)
+            .then((newCard) => {
             setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     function handleCardDelete(card) {
@@ -46,6 +51,20 @@ function App() {
                     return card._id !== isDeleted;
                 });
                 setCards(newCards);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    function handleUpdateUser({name, about}) {
+        api.updateUserInfo(name, about)
+            .then((info) => {
+            setCurrentUser(info);
+            closeAllPopups();
+            })
+            .catch((err) => {
+                console.log(err);
             });
     }
 
@@ -82,25 +101,17 @@ function App() {
 
                 <Footer />
 
-                <PopupWithForm title="Обновить аватар" name="avatar" submitBtn="Сохранить" isOpen={isEditAvatarPopupOpen}
-                               onClose={closeAllPopups}>
-                    <div className="popup__rows">
-                        <input type="url" placeholder="Ссылка на аватар" className="popup__text popup__text_type_link"
-                               id="avatar" required/>
-                        <span className="popup__text-error avatar-error"></span>
-                    </div>
-                </PopupWithForm>
-                <PopupWithForm title="Редактировать профиль" name="profile" submitBtn="Сохранить"
-                               isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
-                    <div className="popup__rows">
-                        <input type="text" placeholder="Имя" className="popup__text popup__text_type_name"
-                               id="title" minLength="2" maxLength="40" required/>
-                        <span className="popup__text-error title-error"></span>
-                        <input type="text" placeholder="Вид деятельности" className="popup__text popup__text_type_occupation"
-                               id="occupation" minLength="2" maxLength="200" required/>
-                        <span className="popup__text-error occupation-error"></span>
-                    </div>
-                </PopupWithForm>
+                  <PopupWithForm title="Обновить аватар" name="avatar" submitBtn="Сохранить" isOpen={isEditAvatarPopupOpen}
+                                 onClose={closeAllPopups}>
+                      <div className="popup__rows">
+                          <input type="url" placeholder="Ссылка на аватар" className="popup__text popup__text_type_link"
+                                 id="avatar" required/>
+                          <span className="popup__text-error avatar-error"></span>
+                      </div>
+                  </PopupWithForm>
+
+                <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+
                 <PopupWithForm title="Новое место" name="card" submitBtn="Сохранить" isOpen={isAddPlacePopupOpen}
                                onClose={closeAllPopups}>
                     <div className="popup__rows">
