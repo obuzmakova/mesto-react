@@ -32,7 +32,7 @@ function Card(props) {
 
     return (
         <div className="element">
-            <img className="element__photo" src={props.card.link} onClick={handleClick} alt="{name}"/>
+            <img className="element__photo" src={props.card.link} onClick={handleClick} alt={props.card.name}/>
             <h3 className="element__title">{props.card.name}</h3>
             <button type="button" className={cardDeleteButtonClassName} onClick={handleDeleteClick}/>
             <button type="button" className={cardLikeButtonClassName} onClick={handleLikeClick}/>

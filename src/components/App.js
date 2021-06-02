@@ -49,7 +49,7 @@ function App() {
 
         api.deleteCard(card._id)
             .then((deletedCard) => {
-                let newCards = cards.filter(function(card) {
+                const newCards = cards.filter(function(card) {
                     return card._id !== isDeleted;
                 });
                 setCards(newCards);
